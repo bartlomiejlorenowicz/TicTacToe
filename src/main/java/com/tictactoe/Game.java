@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Game {
     private final ComputerPlayer computer = new ComputerPlayer();
+    private final MoveValidator validator = new MoveValidator();
     private final Board board;
     private Player currentPlayer = Player.X;
     private final Scanner scanner = new Scanner(System.in);
@@ -23,10 +24,11 @@ public class Game {
                 System.out.print("Enter column: ");
                 int col = scanner.nextInt();
 
-                if (!board.makeMove(row, col, currentPlayer.getSymbol())) {
+                if (!validator.isValid(board, row, col)) {
                     System.out.println("Invalid move! Cell already occupied or out of range.");
                     continue;
                 }
+                board.makeMove(row, col, currentPlayer.getSymbol());
             } else {
                 System.out.println("Computer move: O");
                 computer.makeRandomMove(board, currentPlayer.getSymbol());
