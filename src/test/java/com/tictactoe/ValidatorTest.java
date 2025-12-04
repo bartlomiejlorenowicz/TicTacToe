@@ -1,5 +1,7 @@
 package com.tictactoe;
 
+import com.tictactoe.core.Board;
+import com.tictactoe.core.MoveValidator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

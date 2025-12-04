@@ -1,4 +1,6 @@
-package com.tictactoe;
+package com.tictactoe.ai;
+
+import com.tictactoe.core.Board;
 
 import java.util.Random;
 

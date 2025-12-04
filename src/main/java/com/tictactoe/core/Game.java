@@ -1,4 +1,6 @@
-package com.tictactoe;
+package com.tictactoe.core;
+
+import com.tictactoe.ai.ComputerPlayer;
 
 import java.util.Scanner;
 
@@ -19,10 +21,8 @@ public class Game {
 
             if (currentPlayer == Player.X) {
                 System.out.println("Player move: X");
-                System.out.print("Enter row: ");
-                int row = scanner.nextInt();
-                System.out.print("Enter column: ");
-                int col = scanner.nextInt();
+                int row = getValidNumberFromUser("Enter row: ");
+                int col = getValidNumberFromUser("Enter column: ");
 
                 if (!validator.isValid(board, row, col)) {
                     System.out.println("Invalid move! Cell already occupied or out of range.");
@@ -64,6 +64,18 @@ public class Game {
             for (char cell : row)
                 if (cell == '-') return false;
         return true;
+    }
+
+    private int getValidNumberFromUser(String message) {
+        while (true) {
+            System.out.print(message);
+            String input = scanner.next();
+
+            if (input.matches("\\d+")) {
+                return Integer.parseInt(input);
+            }
+            System.out.println("Invalid input! Please enter a number.");
+        }
     }
 
     public boolean checkWin(char symbol) {

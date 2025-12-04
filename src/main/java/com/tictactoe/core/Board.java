@@ -1,4 +1,4 @@
-package com.tictactoe;
+package com.tictactoe.core;
 
 public class Board {
     private final char[][] board;
