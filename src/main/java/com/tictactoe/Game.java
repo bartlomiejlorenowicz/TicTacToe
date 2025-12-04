@@ -3,6 +3,7 @@ package com.tictactoe;
 import java.util.Scanner;
 
 public class Game {
+    private final ComputerPlayer computer = new ComputerPlayer();
     private final Board board;
     private Player currentPlayer = Player.X;
     private final Scanner scanner = new Scanner(System.in);
@@ -14,21 +15,26 @@ public class Game {
     public void start() {
         while (true) {
             board.printBoard();
-            System.out.println("Player move: " + currentPlayer);
 
-            System.out.print("Enter row: ");
-            int row = scanner.nextInt();
-            System.out.print("Enter column: ");
-            int col = scanner.nextInt();
+            if (currentPlayer == Player.X) {
+                System.out.println("Player move: X");
+                System.out.print("Enter row: ");
+                int row = scanner.nextInt();
+                System.out.print("Enter column: ");
+                int col = scanner.nextInt();
 
-            if (!board.makeMove(row, col, currentPlayer.getSymbol())) {
-                System.out.println("Invalid move! or cell is not empty.");
-                continue;
+                if (!board.makeMove(row, col, currentPlayer.getSymbol())) {
+                    System.out.println("Invalid move! Cell already occupied or out of range.");
+                    continue;
+                }
+            } else {
+                System.out.println("Computer move: O");
+                computer.makeRandomMove(board, currentPlayer.getSymbol());
             }
 
             if (checkWin(currentPlayer.getSymbol())) {
                 board.printBoard();
-                System.out.println("Player win " + currentPlayer + "!");
+                System.out.println("Player " + currentPlayer + " wins!");
                 break;
             }
 
