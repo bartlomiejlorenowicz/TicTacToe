@@ -54,6 +54,10 @@ public class Game {
         currentPlayer = (currentPlayer == Player.X) ? Player.O : Player.X;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     private boolean isBoardFull() {
         char[][] grid = board.getBoard();
         for (char[] row : grid)
@@ -62,7 +66,7 @@ public class Game {
         return true;
     }
 
-    private boolean checkWin(char symbol) {
+    public boolean checkWin(char symbol) {
         int size = board.getSize();
         char[][] b = board.getBoard();
 
