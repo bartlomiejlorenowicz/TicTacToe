@@ -18,16 +18,18 @@ public class Board {
         }
     }
 
-    public boolean isFieldEmpty(int row, int col) {
-        return board[row][col] == '-';
+    public boolean makeMove(int row, int col, char symbol) {
+        if (!isValidMove(row, col)) {
+            return false;
+        }
+        board[row][col] = symbol;
+        return true;
     }
 
-    public boolean makeMove(int row, int col, char symbol) {
-        if (row >= 0 && row < size && col >= 0 && col < size && isFieldEmpty(row, col)) {
-            board[row][col] = symbol;
-            return true;
-        }
-        return false;
+    private boolean isValidMove(int row, int col) {
+        if (row < 0 || row >= size) return false;
+        if (col < 0 || col >= size) return false;
+        return board[row][col] == '-';
     }
 
     public char[][] getBoard() {

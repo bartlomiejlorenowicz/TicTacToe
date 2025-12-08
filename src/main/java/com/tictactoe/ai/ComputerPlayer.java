@@ -14,9 +14,8 @@ public class ComputerPlayer {
         do {
             row = random.nextInt(size);
             col = random.nextInt(size);
-        } while (!board.isFieldEmpty(row, col));
+        } while (!board.makeMove(row, col, symbol));
 
-        board.makeMove(row, col, symbol);
         System.out.println("Computer chose: [" + row + ", " + col + "]");
     }
 }
