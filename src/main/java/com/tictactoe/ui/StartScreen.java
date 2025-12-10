@@ -23,7 +23,7 @@ public class StartScreen extends Application {
         VBox layout = new VBox(20, play3x3, play10x10);
         layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 400, 400);
+        Scene scene = new Scene(layout, 800, 900);
         primaryStage.setTitle("Tic Tac Toe - Select Mode");
         primaryStage.setScene(scene);
         primaryStage.show();
