@@ -1,5 +1,6 @@
 package com.tictactoe.ui;
 
+import com.tictactoe.ai.Difficulty;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,8 +18,8 @@ public class StartScreen extends Application {
         play3x3.setStyle("-fx-font-size: 24;");
         play10x10.setStyle("-fx-font-size: 24;");
 
-        play3x3.setOnAction(e -> startGame(primaryStage, 3));
-        play10x10.setOnAction(e -> startGame(primaryStage, 10));
+        play3x3.setOnAction(e -> startGame(primaryStage, 3, Difficulty.EASY));
+        play10x10.setOnAction(e -> startGame(primaryStage, 10, Difficulty.HARD));
 
         VBox layout = new VBox(20, play3x3, play10x10);
         layout.setAlignment(Pos.CENTER);
@@ -29,8 +30,9 @@ public class StartScreen extends Application {
         primaryStage.show();
     }
 
-    private void startGame(Stage stage, int size) {
+    private void startGame(Stage stage, int size, Difficulty difficulty) {
         TicTacToeApp game = new TicTacToeApp(size);
+        game.setDifficulty(difficulty);
         try {
             game.start(stage);
         } catch (Exception ex) {

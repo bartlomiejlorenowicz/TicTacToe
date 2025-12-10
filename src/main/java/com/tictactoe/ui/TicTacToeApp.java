@@ -1,6 +1,7 @@
 package com.tictactoe.ui;
 
 import com.tictactoe.ai.ComputerPlayer;
+import com.tictactoe.ai.Difficulty;
 import com.tictactoe.core.Board;
 import com.tictactoe.core.Player;
 import javafx.application.Application;
@@ -30,6 +31,10 @@ public class TicTacToeApp extends Application {
         this.boardSize = 3;
     }
 
+    public void setDifficulty(Difficulty difficulty) {
+        computerPlayer.setDifficulty(difficulty);
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -55,7 +60,6 @@ public class TicTacToeApp extends Application {
                 btn.setMinSize(cellSize, cellSize);
                 btn.setPrefSize(cellSize, cellSize);
 
-                // Mniejszy font dla dużej planszy
                 btn.setStyle("-fx-font-size: " + (size == 3 ? "32" : "12") + ";");
 
                 buttons[row][col] = btn;
@@ -96,7 +100,7 @@ public class TicTacToeApp extends Application {
 
         refreshButtonsFromBoard();
 
-        if (checkWin(Player.X.getSymbol())) {
+        if (board.checkWin(Player.X.getSymbol())) {
             updateStatus("You win!");
             disableAllButtons();
             return;
@@ -132,53 +136,11 @@ public class TicTacToeApp extends Application {
         }
     }
 
-    private boolean checkWin(char symbol) {
-        int size = board.getSize();
-        int neededToWin = (size == 3) ? 3 : 5;
-        char[][] b = board.getBoard();
-
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col <= size - neededToWin; col++) {
-                if (checkLine(b, row, col, 0, 1, neededToWin, symbol)) return true;
-            }
-        }
-
-        for (int col = 0; col < size; col++) {
-            for (int row = 0; row <= size - neededToWin; row++) {
-                if (checkLine(b, row, col, 1, 0, neededToWin, symbol)) return true;
-            }
-        }
-
-        for (int row = 0; row <= size - neededToWin; row++) {
-            for (int col = 0; col <= size - neededToWin; col++) {
-                if (checkLine(b, row, col, 1, 1, neededToWin, symbol)) return true;
-            }
-        }
-
-        for (int row = 0; row <= size - neededToWin; row++) {
-            for (int col = neededToWin - 1; col < size; col++) {
-                if (checkLine(b, row, col, 1, -1, neededToWin, symbol)) return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkLine(char[][] board, int startRow, int startCol,
-                              int dRow, int dCol, int length, char symbol) {
-        for (int i = 0; i < length; i++) {
-            if (board[startRow + i * dRow][startCol + i * dCol] != symbol) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void computerMove() {
-        computerPlayer.makeRandomMove(board, Player.O.getSymbol());
+        computerPlayer.makeMove(board, Player.O.getSymbol());
         refreshButtonsFromBoard();
 
-        if (checkWin(Player.O.getSymbol())) {
+        if (board.checkWin(Player.O.getSymbol())) {
             updateStatus("Computer wins!");
             disableAllButtons();
             return;
@@ -201,13 +163,9 @@ public class TicTacToeApp extends Application {
             for (int col = 0; col < size; col++) {
                 char value = grid[row][col];
 
-                if (value != '-') {
-                    buttons[row][col].setText(String.valueOf(value));
-                    buttons[row][col].setDisable(true);
-                } else {
-                    buttons[row][col].setText("-");
-                    buttons[row][col].setDisable(false);
-                }
+                buttons[row][col].setText(String.valueOf(value));
+
+                buttons[row][col].setDisable(value != '-');
             }
         }
     }
