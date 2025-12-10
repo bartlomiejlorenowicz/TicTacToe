@@ -44,14 +44,19 @@ public class TicTacToeApp extends Application {
 
         board = new Board(boardSize);
         int size = board.getSize();
+        int cellSize = (size == 3) ? 100 : 40;
         buttons = new Button[size][size];
 
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                Button btn = new Button("-");
-                btn.setPrefSize(400 / size, 400 / size);
 
-                btn.setStyle("-fx-font-size: " + (size == 3 ? "32" : "18") + ";");
+                Button btn = new Button("-");
+
+                btn.setMinSize(cellSize, cellSize);
+                btn.setPrefSize(cellSize, cellSize);
+
+                // Mniejszy font dla dużej planszy
+                btn.setStyle("-fx-font-size: " + (size == 3 ? "32" : "12") + ";");
 
                 buttons[row][col] = btn;
 
@@ -72,9 +77,14 @@ public class TicTacToeApp extends Application {
         VBox root = new VBox(15, statusLabel, grid, resetButton);
         root.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(root, 400, 450);
+        Scene scene = new Scene(root, size * cellSize + 120, size * cellSize + 250);
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
+        primaryStage.setMinWidth(size * cellSize + 140);
+        primaryStage.setMinHeight(size * cellSize + 280);
+
+        primaryStage.sizeToScene();
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 
@@ -84,8 +94,7 @@ public class TicTacToeApp extends Application {
             return;
         }
 
-        btn.setText("X");
-        btn.setDisable(true);
+        refreshButtonsFromBoard();
 
         if (checkWin(Player.X.getSymbol())) {
             updateStatus("You win!");
@@ -98,6 +107,7 @@ public class TicTacToeApp extends Application {
             return;
         }
 
+        currentPlayer = Player.O;
         updateStatus("Computer move...");
         computerMove();
     }
@@ -179,6 +189,7 @@ public class TicTacToeApp extends Application {
             return;
         }
 
+        currentPlayer = Player.X;
         updateStatus("Your move (X)");
     }
 
@@ -189,9 +200,13 @@ public class TicTacToeApp extends Application {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 char value = grid[row][col];
-                if (value == 'O') {
-                    buttons[row][col].setText("O");
+
+                if (value != '-') {
+                    buttons[row][col].setText(String.valueOf(value));
                     buttons[row][col].setDisable(true);
+                } else {
+                    buttons[row][col].setText("-");
+                    buttons[row][col].setDisable(false);
                 }
             }
         }
