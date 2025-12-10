@@ -8,7 +8,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class TicTacToeApp extends Application {
@@ -17,6 +19,8 @@ public class TicTacToeApp extends Application {
     private Player currentPlayer = Player.X;
     private Button[][] buttons = new Button[3][3];
     private final ComputerPlayer computerPlayer = new ComputerPlayer();
+    private Label statusLabel = new javafx.scene.control.Label("Your move (X)");
+
 
     public static void main(String[] args) {
         launch(args);
@@ -47,7 +51,12 @@ public class TicTacToeApp extends Application {
             }
         }
 
-        Scene scene = new Scene(grid, 400, 450);
+        statusLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+
+        VBox root = new VBox(15, statusLabel, grid);
+        root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root, 400, 450);
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -55,23 +64,25 @@ public class TicTacToeApp extends Application {
 
     private void onCellClicked(Button btn, int row, int col) {
         if (!board.makeMove(row, col, currentPlayer.getSymbol())) {
-            System.out.println("Invalid move!");
+            updateStatus("Invalid move!");
             return;
         }
 
-        btn.setText(String.valueOf(currentPlayer.getSymbol()));
+        btn.setText("X");
         btn.setDisable(true);
 
-        if (checkWin(currentPlayer.getSymbol())) {
-            System.out.println("Player " + currentPlayer + " wins!");
+        if (checkWin(Player.X.getSymbol())) {
+            updateStatus("You win!");
             disableAllButtons();
             return;
         }
 
         if (isBoardFull()) {
-            System.out.println("Draw!");
+            updateStatus("Draw!");
             return;
         }
+
+        updateStatus("Computer move...");
         computerMove();
     }
 
@@ -140,14 +151,17 @@ public class TicTacToeApp extends Application {
         refreshButtonsFromBoard();
 
         if (checkWin(Player.O.getSymbol())) {
-            System.out.println("Computer wins!");
+            updateStatus("Computer wins!");
             disableAllButtons();
             return;
         }
 
         if (isBoardFull()) {
-            System.out.println("Draw!");
+            updateStatus("Draw!");
+            return;
         }
+
+        updateStatus("Your move (X)");
     }
 
     private void refreshButtonsFromBoard() {
@@ -161,6 +175,10 @@ public class TicTacToeApp extends Application {
                 }
             }
         }
+    }
+
+    private void updateStatus(String text) {
+        statusLabel.setText(text);
     }
 
 }
