@@ -15,12 +15,20 @@ import javafx.stage.Stage;
 
 public class TicTacToeApp extends Application {
 
-    private Board board = new Board(3);
+    private Board board;
+    private int boardSize;
     private Player currentPlayer = Player.X;
-    private Button[][] buttons = new Button[3][3];
+    private Button[][] buttons;
     private final ComputerPlayer computerPlayer = new ComputerPlayer();
     private Label statusLabel = new javafx.scene.control.Label("Your move (X)");
 
+    public TicTacToeApp(int size) {
+        this.boardSize = size;
+    }
+
+    public TicTacToeApp() {
+        this.boardSize = 3;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -34,11 +42,16 @@ public class TicTacToeApp extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(20));
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
+        board = new Board(boardSize);
+        int size = board.getSize();
+        buttons = new Button[size][size];
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
                 Button btn = new Button("-");
-                btn.setPrefSize(100, 100);
-                btn.setStyle("-fx-font-size: 32;");
+                btn.setPrefSize(400 / size, 400 / size);
+
+                btn.setStyle("-fx-font-size: " + (size == 3 ? "32" : "18") + ";");
 
                 buttons[row][col] = btn;
 
@@ -46,7 +59,6 @@ public class TicTacToeApp extends Application {
                 final int c = col;
 
                 btn.setOnAction(e -> onCellClicked(btn, r, c));
-
                 grid.add(btn, col, row);
             }
         }
@@ -101,8 +113,10 @@ public class TicTacToeApp extends Application {
     }
 
     private void disableAllButtons() {
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
+        int size = board.getSize();
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
                 buttons[row][col].setDisable(true);
             }
         }
@@ -169,9 +183,11 @@ public class TicTacToeApp extends Application {
     }
 
     private void refreshButtonsFromBoard() {
+        int size = board.getSize();
         char[][] grid = board.getBoard();
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
                 char value = grid[row][col];
                 if (value == 'O') {
                     buttons[row][col].setText("O");
@@ -186,12 +202,13 @@ public class TicTacToeApp extends Application {
     }
 
     private void resetGame() {
-        board = new Board(3);
+        board = new Board(boardSize);
         currentPlayer = Player.X;
         updateStatus("Your move (X)");
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
+        int size = board.getSize();
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
                 buttons[row][col].setText("-");
                 buttons[row][col].setDisable(false);
             }

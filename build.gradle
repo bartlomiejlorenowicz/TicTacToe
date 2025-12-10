@@ -27,5 +27,5 @@ javafx {
 }
 
 application {
-    mainClass = 'com.tictactoe.ui.TicTacToeApp'
+    mainClass = 'com.tictactoe.ui.StartScreen'
 }
