@@ -53,7 +53,11 @@ public class TicTacToeApp extends Application {
 
         statusLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
 
-        VBox root = new VBox(15, statusLabel, grid);
+        Button resetButton = new Button("Reset");
+        resetButton.setStyle("-fx-font-size: 18;");
+        resetButton.setOnAction(e -> resetGame());
+
+        VBox root = new VBox(15, statusLabel, grid, resetButton);
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 400, 450);
@@ -179,6 +183,19 @@ public class TicTacToeApp extends Application {
 
     private void updateStatus(String text) {
         statusLabel.setText(text);
+    }
+
+    private void resetGame() {
+        board = new Board(3);
+        currentPlayer = Player.X;
+        updateStatus("Your move (X)");
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                buttons[row][col].setText("-");
+                buttons[row][col].setDisable(false);
+            }
+        }
     }
 
 }
