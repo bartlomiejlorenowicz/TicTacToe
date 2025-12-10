@@ -1,5 +1,7 @@
 package com.tictactoe.ui;
 
+import com.tictactoe.core.Board;
+import com.tictactoe.core.Player;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,9 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
 public class TicTacToeApp extends Application {
+
+    private Board board = new Board(3);
+    private Player currentPlayer = Player.X;
+    private Button[][] buttons = new Button[3][3];
 
     public static void main(String[] args) {
         launch(args);
@@ -30,6 +34,8 @@ public class TicTacToeApp extends Application {
                 btn.setPrefSize(100, 100);
                 btn.setStyle("-fx-font-size: 32;");
 
+                buttons[row][col] = btn;
+
                 final int r = row;
                 final int c = col;
 
@@ -46,8 +52,83 @@ public class TicTacToeApp extends Application {
     }
 
     private void onCellClicked(Button btn, int row, int col) {
-        btn.setText("X");
+        if (!board.makeMove(row, col, currentPlayer.getSymbol())) {
+            System.out.println("Invalid move!");
+            return;
+        }
+
+        btn.setText(String.valueOf(currentPlayer.getSymbol()));
         btn.setDisable(true);
+
+        if (checkWin(currentPlayer.getSymbol())) {
+            System.out.println("Player " + currentPlayer + " wins!");
+            disableAllButtons();
+            return;
+        }
+
+        if (isBoardFull()) {
+            System.out.println("Draw!");
+            return;
+        }
     }
 
+    private boolean isBoardFull() {
+        char[][] grid = board.getBoard();
+        for (char[] row : grid) {
+            for (char cell : row) {
+                if (cell == '-') return false;
+            }
+        }
+        return true;
+    }
+
+    private void disableAllButtons() {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                buttons[row][col].setDisable(true);
+            }
+        }
+    }
+
+    private boolean checkWin(char symbol) {
+        int size = board.getSize();
+        int neededToWin = (size == 3) ? 3 : 5;
+        char[][] b = board.getBoard();
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col <= size - neededToWin; col++) {
+                if (checkLine(b, row, col, 0, 1, neededToWin, symbol)) return true;
+            }
+        }
+
+        for (int col = 0; col < size; col++) {
+            for (int row = 0; row <= size - neededToWin; row++) {
+                if (checkLine(b, row, col, 1, 0, neededToWin, symbol)) return true;
+            }
+        }
+
+        for (int row = 0; row <= size - neededToWin; row++) {
+            for (int col = 0; col <= size - neededToWin; col++) {
+                if (checkLine(b, row, col, 1, 1, neededToWin, symbol)) return true;
+            }
+        }
+
+        for (int row = 0; row <= size - neededToWin; row++) {
+            for (int col = neededToWin - 1; col < size; col++) {
+                if (checkLine(b, row, col, 1, -1, neededToWin, symbol)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkLine(char[][] board, int startRow, int startCol,
+                              int dRow, int dCol, int length, char symbol) {
+        for (int i = 0; i < length; i++) {
+            if (board[startRow + i * dRow][startCol + i * dCol] != symbol) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
