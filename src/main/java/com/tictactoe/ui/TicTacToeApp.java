@@ -1,5 +1,6 @@
 package com.tictactoe.ui;
 
+import com.tictactoe.ai.ComputerPlayer;
 import com.tictactoe.core.Board;
 import com.tictactoe.core.Player;
 import javafx.application.Application;
@@ -15,6 +16,7 @@ public class TicTacToeApp extends Application {
     private Board board = new Board(3);
     private Player currentPlayer = Player.X;
     private Button[][] buttons = new Button[3][3];
+    private final ComputerPlayer computerPlayer = new ComputerPlayer();
 
     public static void main(String[] args) {
         launch(args);
@@ -70,6 +72,7 @@ public class TicTacToeApp extends Application {
             System.out.println("Draw!");
             return;
         }
+        computerMove();
     }
 
     private boolean isBoardFull() {
@@ -131,4 +134,33 @@ public class TicTacToeApp extends Application {
         }
         return true;
     }
+
+    private void computerMove() {
+        computerPlayer.makeRandomMove(board, Player.O.getSymbol());
+        refreshButtonsFromBoard();
+
+        if (checkWin(Player.O.getSymbol())) {
+            System.out.println("Computer wins!");
+            disableAllButtons();
+            return;
+        }
+
+        if (isBoardFull()) {
+            System.out.println("Draw!");
+        }
+    }
+
+    private void refreshButtonsFromBoard() {
+        char[][] grid = board.getBoard();
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                char value = grid[row][col];
+                if (value == 'O') {
+                    buttons[row][col].setText("O");
+                    buttons[row][col].setDisable(true);
+                }
+            }
+        }
+    }
+
 }
