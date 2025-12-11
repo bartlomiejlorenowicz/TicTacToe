@@ -106,11 +106,15 @@ public class TicTacToeApp extends Application {
         rankingButton.setStyle("-fx-font-size: 18;");
         rankingButton.setOnAction(e -> showRankingWindow());
 
-        VBox root = new VBox(15, statusLabel, grid, resetButton, rankingButton);
+        Button backToMenuButton = new Button("Back to Menu");
+        backToMenuButton.setStyle("-fx-font-size: 18;");
+        backToMenuButton.setOnAction(e -> goBackToMenu(primaryStage));
+
+        VBox root = new VBox(15, statusLabel, grid, resetButton, rankingButton , backToMenuButton);
 
         root.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(root, size * cellSize + 120, size * cellSize + 250);
+        Scene scene = new Scene(root, 800, 900);
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(size * cellSize + 140);
@@ -297,6 +301,16 @@ public class TicTacToeApp extends Application {
         Scene scene = new Scene(root, 450, 400);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void goBackToMenu(Stage stage) {
+        saveGameService.saveGame(username, null);
+        StartScreen startScreen = new StartScreen();
+        try {
+            startScreen.start(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
