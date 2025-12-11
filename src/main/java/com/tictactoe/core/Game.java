@@ -33,7 +33,7 @@ public class Game {
                 computer.makeRandomMove(board, currentPlayer.getSymbol());
             }
 
-            if (checkWin(currentPlayer.getSymbol())) {
+            if (board.checkWin(currentPlayer.getSymbol())) {
                 board.printBoard();
                 System.out.println("Player " + currentPlayer + " wins!");
                 break;
@@ -76,46 +76,4 @@ public class Game {
             System.out.println("Invalid input! Please enter a number.");
         }
     }
-
-    public boolean checkWin(char symbol) {
-        int size = board.getSize();
-        int neededToWin = (size == 3) ? 3 : 5;
-        char[][] b = board.getBoard();
-
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col <= size - neededToWin; col++) {
-                if (checkLine(b, row, col, 0, 1, neededToWin, symbol)) return true;
-            }
-        }
-
-        for (int col = 0; col < size; col++) {
-            for (int row = 0; row <= size - neededToWin; row++) {
-                if (checkLine(b, row, col, 1, 0, neededToWin, symbol)) return true;
-            }
-        }
-
-        for (int row = 0; row <= size - neededToWin; row++) {
-            for (int col = 0; col <= size - neededToWin; col++) {
-                if (checkLine(b, row, col, 1, 1, neededToWin, symbol)) return true;
-            }
-        }
-
-        for (int row = 0; row <= size - neededToWin; row++) {
-            for (int col = neededToWin - 1; col < size; col++) {
-                if (checkLine(b, row, col, 1, -1, neededToWin, symbol)) return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean checkLine(char[][] board, int startRow, int startCol, int dRow, int dCol, int length, char symbol) {
-        for (int i = 0; i < length; i++) {
-            if (board[startRow + i * dRow][startCol + i * dCol] != symbol) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }
