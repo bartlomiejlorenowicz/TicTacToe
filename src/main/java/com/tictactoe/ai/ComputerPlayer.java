@@ -16,6 +16,10 @@ public class ComputerPlayer {
         this.difficulty = difficulty;
     }
 
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
     public void makeMove(Board board, char symbol) {
         if (difficulty == Difficulty.HARD) {
             if (tryWinOrBlock(board, symbol)) return;

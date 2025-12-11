@@ -4,12 +4,17 @@ import com.tictactoe.ai.ComputerPlayer;
 import com.tictactoe.ai.Difficulty;
 import com.tictactoe.core.Board;
 import com.tictactoe.core.Player;
+import com.tictactoe.save.GameState;
+import com.tictactoe.save.SaveGameService;
+import com.tictactoe.stats.RankingService;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -22,6 +27,10 @@ public class TicTacToeApp extends Application {
     private Button[][] buttons;
     private final ComputerPlayer computerPlayer = new ComputerPlayer();
     private Label statusLabel = new javafx.scene.control.Label("Your move (X)");
+    private final RankingService rankingService = new RankingService();
+    private final SaveGameService saveGameService = new SaveGameService();
+    private String username = "Player";
+
 
     public TicTacToeApp(int size) {
         this.boardSize = size;
@@ -48,6 +57,21 @@ public class TicTacToeApp extends Application {
         grid.setPadding(new Insets(20));
 
         board = new Board(boardSize);
+
+        GameState loaded = saveGameService.loadGame(username);
+
+        if (loaded != null) {
+            restoreBoard(loaded);
+            currentPlayer = (loaded.getCurrentPlayer() == 'X') ? Player.X : Player.O;
+
+            Difficulty diff = Difficulty.valueOf(loaded.getDifficulty());
+            computerPlayer.setDifficulty(diff);
+
+            updateStatus("Loaded saved game. Current player: " + currentPlayer);
+        } else {
+            updateStatus("Your move (X)");
+        }
+
         int size = board.getSize();
         int cellSize = (size == 3) ? 100 : 40;
         buttons = new Button[size][size];
@@ -78,7 +102,12 @@ public class TicTacToeApp extends Application {
         resetButton.setStyle("-fx-font-size: 18;");
         resetButton.setOnAction(e -> resetGame());
 
-        VBox root = new VBox(15, statusLabel, grid, resetButton);
+        Button rankingButton = new Button("Ranking");
+        rankingButton.setStyle("-fx-font-size: 18;");
+        rankingButton.setOnAction(e -> showRankingWindow());
+
+        VBox root = new VBox(15, statusLabel, grid, resetButton, rankingButton);
+
         root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, size * cellSize + 120, size * cellSize + 250);
@@ -99,15 +128,24 @@ public class TicTacToeApp extends Application {
         }
 
         refreshButtonsFromBoard();
+        saveCurrentGame();
 
         if (board.checkWin(Player.X.getSymbol())) {
             updateStatus("You win!");
             disableAllButtons();
+
+            rankingService.recordResult(username, true);
+            saveGameService.saveGame(username, null);
+
             return;
         }
 
         if (isBoardFull()) {
             updateStatus("Draw!");
+
+            rankingService.recordResult(username, false);
+            saveGameService.saveGame(username, null);
+
             return;
         }
 
@@ -139,15 +177,24 @@ public class TicTacToeApp extends Application {
     private void computerMove() {
         computerPlayer.makeMove(board, Player.O.getSymbol());
         refreshButtonsFromBoard();
+        saveCurrentGame();
 
         if (board.checkWin(Player.O.getSymbol())) {
             updateStatus("Computer wins!");
             disableAllButtons();
+
+            rankingService.recordResult(username, false);
+            saveGameService.saveGame(username, null);
+
             return;
         }
 
         if (isBoardFull()) {
             updateStatus("Draw!");
+
+            rankingService.recordResult(username, false);
+            saveGameService.saveGame(username, null);
+
             return;
         }
 
@@ -186,6 +233,70 @@ public class TicTacToeApp extends Application {
                 buttons[row][col].setDisable(false);
             }
         }
+    }
+
+    private void restoreBoard(GameState state) {
+        int size = state.getBoardSize();
+        this.boardSize = size;
+        this.board = new Board(size);
+
+        char[][] loaded = state.getBoard();
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                if (loaded[r][c] != '-') {
+                    board.makeMove(r, c, loaded[r][c]);
+                }
+            }
+        }
+        refreshButtonsFromBoard();
+    }
+
+    private void saveCurrentGame() {
+        GameState state = new GameState(
+                board.getBoard(),
+                boardSize,
+                currentPlayer.getSymbol(),
+                computerPlayer.getDifficulty().name()
+        );
+        saveGameService.saveGame(username, state);
+    }
+
+    private void showRankingWindow() {
+        Stage stage = new Stage();
+        stage.setTitle("Ranking players");
+
+        TableView<RankingRow> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<RankingRow, String> userCol = new TableColumn<>("Username");
+        userCol.setCellValueFactory(data -> data.getValue().usernameProperty());
+
+        TableColumn<RankingRow, Integer> playedCol = new TableColumn<>("Played");
+        playedCol.setCellValueFactory(data -> data.getValue().playedProperty().asObject());
+
+        TableColumn<RankingRow, Integer> wonCol = new TableColumn<>("Won");
+        wonCol.setCellValueFactory(data -> data.getValue().wonProperty().asObject());
+
+        TableColumn<RankingRow, String> percentCol = new TableColumn<>("Win %");
+        percentCol.setCellValueFactory(data -> data.getValue().winPercentageProperty());
+
+        table.getColumns().addAll(userCol, playedCol, wonCol, percentCol);
+
+        rankingService.getRanking().forEach((user, stats) -> {
+            table.getItems().add(new RankingRow(
+                    user,
+                    stats.getGamesPlayed(),
+                    stats.getGamesWon()
+            ));
+        });
+
+        VBox root = new VBox(15, table);
+        root.setPadding(new Insets(20));
+        root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root, 450, 400);
+        stage.setScene(scene);
+        stage.show();
     }
 
 }
