@@ -17,7 +17,7 @@ class GameTest {
         board.makeMove(0, 1, 'O');
         board.makeMove(0, 2, 'O');
 
-        assertTrue(game.checkWin('O'));
+        assertTrue(board.checkWin('O'));
     }
 
     @Test
@@ -29,7 +29,7 @@ class GameTest {
         board.makeMove(1, 1, 'O');
         board.makeMove(2, 1, 'O');
 
-        assertTrue(game.checkWin('O'));
+        assertTrue(board.checkWin('O'));
     }
 
     @Test
@@ -41,7 +41,7 @@ class GameTest {
         board.makeMove(1, 1, 'O');
         board.makeMove(2, 2, 'O');
 
-        assertTrue(game.checkWin('O'));
+        assertTrue(board.checkWin('O'));
     }
 
     @Test
@@ -53,7 +53,7 @@ class GameTest {
         board.makeMove(1, 1, 'O');
         board.makeMove(2, 0, 'O');
 
-        assertTrue(game.checkWin('O'));
+        assertTrue(board.checkWin('O'));
     }
 
     @Test
@@ -65,7 +65,7 @@ class GameTest {
         board.makeMove(2, 1, 'X');
         board.makeMove(2, 2, 'X');
 
-        assertTrue(game.checkWin('X'));
+        assertTrue(board.checkWin('X'));
     }
 
     @Test
@@ -77,7 +77,7 @@ class GameTest {
         board.makeMove(1, 0, 'X');
         board.makeMove(2, 0, 'X');
 
-        assertTrue(game.checkWin('X'));
+        assertTrue(board.checkWin('X'));
     }
 
     @Test
@@ -89,7 +89,7 @@ class GameTest {
         board.makeMove(1, 1, 'X');
         board.makeMove(2, 2, 'X');
 
-        assertTrue(game.checkWin('X'));
+        assertTrue(board.checkWin('X'));
     }
 
     @Test
@@ -107,8 +107,7 @@ class GameTest {
         board.makeMove(2,1,'X');
         board.makeMove(2,2,'O');
 
-        assertFalse(game.checkWin('X'));
-        assertFalse(game.checkWin('O'));
+        assertFalse(board.checkWin('X'));
+        assertFalse(board.checkWin('O'));
     }
-
 }
