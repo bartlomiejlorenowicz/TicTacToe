@@ -1,8 +1,8 @@
 # TicTacToe Game
 
-## Author: Bartlomiej Lorenowicz
+## Author: Bartłomiej Lorenowicz
 
-This TicTacToe game is built with Java, JavaFX and Gradle.  
+This TicTacToe game is built with **Java**, **JavaFX** and **Gradle**.  
 It includes AI logic, a ranking system, game saving & loading, and two board sizes (3×3 and 10×10).
 
 ---
@@ -14,22 +14,20 @@ It includes AI logic, a ranking system, game saving & loading, and two board siz
 - Game state auto-saving and loading
 - Ranking system with persistent storage
 - JavaFX graphical interface
-- Option to return to main menu
 - Reset game button
+- Option to return to main menu
 
 ---
-🧱 Technologies
 
-Java 17
+## 🧱 Technologies
 
-JavaFX 21
+- Java **17**
+- JavaFX **21**
+- Gradle
+- JUnit **5**
+- Object Serialization
 
-Gradle
-
-JUnit 5
-
-Object Serialization
-
+---
 
 ## ▶️ How to Run
 
@@ -37,7 +35,11 @@ Object Serialization
 ```bash
 ./gradlew run
 ```
-🖼️ Screenshots & Animation
-🎥 Gameplay Animation
+## # Using IntelliJ IDEA
+1. Open project as Gradle project
+2. Make sure JavaFX plugin is applied (handled automatically)
+3. Run: com.tictactoe.ui.StartScreen
+
+## 🎥 Gameplay Animation
 
 ![Gameplay Animation](docs/gameplay.gif)
