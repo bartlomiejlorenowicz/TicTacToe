@@ -4,6 +4,7 @@ import com.tictactoe.ai.ComputerPlayer;
 import com.tictactoe.ai.Difficulty;
 import com.tictactoe.core.Board;
 import com.tictactoe.core.Player;
+import com.tictactoe.core.WinChecker;
 import com.tictactoe.save.GameState;
 import com.tictactoe.save.SaveGameService;
 import com.tictactoe.stats.RankingService;
@@ -30,7 +31,7 @@ public class TicTacToeApp extends Application {
     private final RankingService rankingService = new RankingService();
     private final SaveGameService saveGameService = new SaveGameService();
     private String username = "Player";
-
+    private final WinChecker winChecker = new WinChecker();
 
     public TicTacToeApp(int size) {
         this.boardSize = size;
@@ -134,7 +135,7 @@ public class TicTacToeApp extends Application {
         refreshButtonsFromBoard();
         saveCurrentGame();
 
-        if (board.checkWin(Player.X.getSymbol())) {
+        if (winChecker.hasWon(board, Player.X.getSymbol())) {
             updateStatus("You win!");
             disableAllButtons();
 
@@ -183,7 +184,7 @@ public class TicTacToeApp extends Application {
         refreshButtonsFromBoard();
         saveCurrentGame();
 
-        if (board.checkWin(Player.O.getSymbol())) {
+        if (winChecker.hasWon(board, Player.O.getSymbol())) {
             updateStatus("Computer wins!");
             disableAllButtons();
 

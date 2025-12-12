@@ -1,6 +1,7 @@
 package com.tictactoe.ai;
 
 import com.tictactoe.core.Board;
+import com.tictactoe.core.WinChecker;
 
 import java.util.Random;
 
@@ -8,6 +9,7 @@ public class ComputerPlayer {
 
     private Difficulty difficulty = Difficulty.EASY;
     private final Random random = new Random();
+    private final WinChecker winChecker = new WinChecker();
 
     private int lastMoveRow;
     private int lastMoveCol;
@@ -51,7 +53,7 @@ public class ComputerPlayer {
             for (int c = 0; c < size; c++) {
                 if (grid[r][c] == '-') {
                     board.makeMove(r, c, symbol);
-                    if (board.checkWin(symbol)) {
+                    if (winChecker.hasWon(board, symbol)) {
                         lastMoveRow = r;
                         lastMoveCol = c;
                         board.undoMove(r, c);
