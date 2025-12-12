@@ -9,6 +9,7 @@ public class Game {
     private final Board board;
     private Player currentPlayer = Player.X;
     private final Scanner scanner = new Scanner(System.in);
+    private final WinChecker winChecker = new WinChecker();
 
     public Game(int size) {
         this.board = new Board(size);
@@ -33,7 +34,7 @@ public class Game {
                 computer.makeRandomMove(board, currentPlayer.getSymbol());
             }
 
-            if (board.checkWin(currentPlayer.getSymbol())) {
+            if (winChecker.hasWon(board, currentPlayer.getSymbol())) {
                 board.printBoard();
                 System.out.println("Player " + currentPlayer + " wins!");
                 break;

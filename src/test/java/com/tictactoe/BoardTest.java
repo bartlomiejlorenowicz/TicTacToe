@@ -3,11 +3,14 @@ package com.tictactoe;
 import com.tictactoe.ai.ComputerPlayer;
 import com.tictactoe.ai.Difficulty;
 import com.tictactoe.core.Board;
+import com.tictactoe.core.WinChecker;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
+
+    private WinChecker winChecker = new WinChecker();
 
     @Test
     void shouldMakeWinningMoveWhenPossible() {
@@ -43,7 +46,7 @@ class BoardTest {
         board.makeMove(0,0,'X');
         board.makeMove(0,1,'X');
 
-        assertFalse(board.checkWin('X'));
+        assertFalse(winChecker.hasWon(board, 'X'));
     }
 
     @Test
@@ -55,7 +58,7 @@ class BoardTest {
         board.makeMove(5,2,'X');
         board.makeMove(5,3,'X');
 
-        assertFalse(board.checkWin('X'));
+        assertFalse(winChecker.hasWon(board, 'X'));
     }
 
     @Test

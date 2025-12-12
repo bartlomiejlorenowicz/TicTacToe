@@ -2,11 +2,14 @@ package com.tictactoe;
 
 import com.tictactoe.core.Board;
 import com.tictactoe.core.Game;
+import com.tictactoe.core.WinChecker;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
+
+    private WinChecker winChecker = new WinChecker();
 
     @Test
     void shouldWinOInRow() {
@@ -17,7 +20,7 @@ class GameTest {
         board.makeMove(0, 1, 'O');
         board.makeMove(0, 2, 'O');
 
-        assertTrue(board.checkWin('O'));
+        assertTrue(winChecker.hasWon(board, 'O'));
     }
 
     @Test
@@ -29,7 +32,7 @@ class GameTest {
         board.makeMove(1, 1, 'O');
         board.makeMove(2, 1, 'O');
 
-        assertTrue(board.checkWin('O'));
+        assertTrue(winChecker.hasWon(board, 'O'));
     }
 
     @Test
@@ -41,7 +44,7 @@ class GameTest {
         board.makeMove(1, 1, 'O');
         board.makeMove(2, 2, 'O');
 
-        assertTrue(board.checkWin('O'));
+        assertTrue(winChecker.hasWon(board, 'O'));
     }
 
     @Test
@@ -53,7 +56,7 @@ class GameTest {
         board.makeMove(1, 1, 'O');
         board.makeMove(2, 0, 'O');
 
-        assertTrue(board.checkWin('O'));
+        assertTrue(winChecker.hasWon(board, 'O'));
     }
 
     @Test
@@ -65,7 +68,7 @@ class GameTest {
         board.makeMove(2, 1, 'X');
         board.makeMove(2, 2, 'X');
 
-        assertTrue(board.checkWin('X'));
+        assertTrue(winChecker.hasWon(board, 'X'));
     }
 
     @Test
@@ -77,7 +80,7 @@ class GameTest {
         board.makeMove(1, 0, 'X');
         board.makeMove(2, 0, 'X');
 
-        assertTrue(board.checkWin('X'));
+        assertTrue(winChecker.hasWon(board, 'X'));
     }
 
     @Test
@@ -89,7 +92,7 @@ class GameTest {
         board.makeMove(1, 1, 'X');
         board.makeMove(2, 2, 'X');
 
-        assertTrue(board.checkWin('X'));
+        assertTrue(winChecker.hasWon(board, 'X'));
     }
 
     @Test
@@ -97,17 +100,17 @@ class GameTest {
         Game game = new Game(3);
         Board board = game.getBoard();
 
-        board.makeMove(0,0,'X');
-        board.makeMove(0,1,'O');
-        board.makeMove(0,2,'X');
-        board.makeMove(1,0,'O');
-        board.makeMove(1,1,'O');
-        board.makeMove(1,2,'X');
-        board.makeMove(2,0,'O');
-        board.makeMove(2,1,'X');
-        board.makeMove(2,2,'O');
+        board.makeMove(0, 0, 'X');
+        board.makeMove(0, 1, 'O');
+        board.makeMove(0, 2, 'X');
+        board.makeMove(1, 0, 'O');
+        board.makeMove(1, 1, 'O');
+        board.makeMove(1, 2, 'X');
+        board.makeMove(2, 0, 'O');
+        board.makeMove(2, 1, 'X');
+        board.makeMove(2, 2, 'O');
 
-        assertFalse(board.checkWin('X'));
-        assertFalse(board.checkWin('O'));
+        assertFalse(winChecker.hasWon(board, 'X'));
+        assertFalse(winChecker.hasWon(board, 'O'));
     }
 }
